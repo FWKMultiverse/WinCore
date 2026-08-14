@@ -1,4 +1,4 @@
-MIT License
+# MIT License
 
 Copyright (c) 2026 FWK Multiverse
 
@@ -19,3 +19,48 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+## Project Information
+
+**Project:** WinCore
+**Copyright Holder:** FWK Multiverse
+**Original Repository:** https://github.com/FWKMultiverse/WinCore
+
+WinCore is free and open-source software released under the MIT License.
+
+You are free to use, copy, modify, merge, publish, distribute, sublicense,
+and sell copies of the Software, subject to the terms of the MIT License.
+
+When distributing copies or substantial portions of WinCore, the original
+copyright notice and this license must be retained.
+
+## Attribution
+
+You may use WinCore as part of your own projects and may identify yourself,
+your organization, or your project as the developer or maintainer of your
+own work.
+
+You are not required to represent yourself as a developer or maintainer of
+the original WinCore project.
+
+If you modify WinCore or create a derivative work, you may provide your own
+project name, developer information, repository, and profile separately,
+provided that the original copyright and MIT License notice remain included
+as required above.
+
+## Responsible Use
+
+WinCore is provided for general-purpose software development and may be used,
+modified, and redistributed in accordance with the MIT License.
+
+Users and organizations are responsible for their use of the Software and
+for complying with applicable laws, regulations, and third-party rights.
+
+The project maintainers do not endorse or encourage the use of WinCore for
+unlawful, harmful, abusive, or malicious activities.
+
+This Responsible Use statement expresses the project's intended use and
+does not modify, restrict, or replace any permission granted by the MIT
+License.
