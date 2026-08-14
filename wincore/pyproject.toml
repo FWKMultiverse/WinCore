@@ -1,0 +1,63 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "WinCore"
+version = "0.6.3"
+description = "A stability + resource-awareness layer for PyTorch training on Windows: file-lock-safe checkpoint writes, safe torch.compile, CPU thread scheduling, real GPU/RAM/VRAM spec checks, multi-GPU (DDP) setup, DataLoader/VRAM/disk-cache memory management, and background (per-layer) NaN detection."
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+    { name = "FWK Multiverse" },
+]
+keywords = ["pytorch", "windows", "torch.compile", "triton", "checkpoint", "training", "cuda", "gpu"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: POSIX :: Linux",
+    "License :: OSI Approved :: MIT License",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+# Core package has zero hard dependencies -- every module that touches
+# torch/psutil/pynvml/wmi imports them lazily inside functions, so
+# WinCore stays importable even in environments where those aren't
+# installed (CI, tooling scripts, etc). Install the extras you need.
+#
+# NOTE: the pip *package* is `nvidia-ml-py`, not `pynvml` -- `pynvml`
+# on PyPI is an old, no-longer-maintained project, and installing it
+# alongside a real NVIDIA driver now prints the
+# "The pynvml package is deprecated. Please install nvidia-ml-py
+# instead." warning from torch itself. `nvidia-ml-py` is NVIDIA's own,
+# actively maintained package and it still exposes the same `import
+# pynvml` module name, so nothing in this codebase's `import pynvml`
+# lines needs to change -- only the dependency name below does.
+dependencies = []
+
+[project.optional-dependencies]
+gpu = ["nvidia-ml-py"]
+sysinfo = ["psutil"]
+windows-gpu-name = ["wmi; platform_system=='Windows'"]
+safetensors = ["safetensors"]
+full = ["psutil", "nvidia-ml-py", "wmi; platform_system=='Windows'", "safetensors"]
+kernels = ["ninja"]
+dev = ["pytest>=7", "ninja", "safetensors"]
+
+[project.urls]
+Homepage = "https://github.com/FWKMultiverse/WinCore"
+Issues = "https://github.com/FWKMultiverse/WinCore/issues"
+
+[tool.setuptools.packages.find]
+include = ["WinCore*"]
+
+# setuptools only packages .py files by default -- non-Python source
+# files (like the .cu kernel below) get silently dropped from the built
+# wheel unless explicitly declared here. This was the cause of the
+# FileNotFoundError for fused_bias_gelu_kernel.cu after `pip install`:
+# the file was present in the repo/sdist working tree, but never made
+# it into site-packages.
+[tool.setuptools.package-data]
+"WinCore" = ["README.md", "API_REFERENCE.md"]
+"WinCore.kernels" = ["*.cu"]
