@@ -1,5 +1,10 @@
 # WinCore
 
+[![PyPI](https://img.shields.io/pypi/v/WinCore?label=PyPI)](https://pypi.org/project/WinCore/)
+[![Python](https://img.shields.io/pypi/pyversions/WinCore?label=Python)](https://pypi.org/project/WinCore/)
+[![License](https://img.shields.io/github/license/FWKMultiverse/WinCore?label=License)](https://github.com/FWKMultiverse/WinCore/blob/main/LICENSE)
+[![Issues](https://img.shields.io/github/issues/FWKMultiverse/WinCore?label=Issues)](https://github.com/FWKMultiverse/WinCore/issues)
+
 **Windows-focused utilities for reliable Python and PyTorch workflows.**
 
 WinCore is a free and open-source Python library designed specifically to address
@@ -51,7 +56,7 @@ and should be used when integrating or working with a specific API.
 
 **WinCore 0.6.3 is the first full public release of the project.**
 
-The library is now publicly available for general use. However, comprehensive
+The library is publicly available for general use. However, comprehensive
 testing across every supported Windows configuration, hardware combination,
 GPU, driver, Python version, and PyTorch version has not yet been completed.
 
