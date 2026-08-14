@@ -1,6 +1,6 @@
 # WinCore
 
-**Windows-focused utilities for reliable, practical Python and PyTorch workflows.**
+**Windows-focused utilities for reliable Python and PyTorch workflows.**
 
 WinCore is a free and open-source Python library designed specifically to address
 common development and machine-learning workflow problems on Windows.
@@ -31,7 +31,7 @@ PyPI: https://pypi.org/project/WinCore/0.6.3/
 * Disk caching with safe writes
 * Optional CUDA kernel acceleration
 
-WinCore is designed to be practical and conservative: when hardware or
+WinCore is designed to be practical and conservative. When hardware or
 environment information cannot be reliably detected, it prefers reporting
 unknown or falling back safely rather than inventing results.
 
@@ -40,37 +40,41 @@ unknown or falling back safely rather than inventing results.
 This README provides the project overview and quick-start information.
 
 For the complete public API, including functions, classes, parameters,
-return values, and behavioral details, see:
+return values, and behavior, see the full API Reference:
 
-**[API Reference](API_REFERENCE.md)**
+**[`wincore/API_REFERENCE.md`](wincore/API_REFERENCE.md)**
 
-The API reference is the authoritative place to look when you need to use or
-integrate a specific WinCore feature.
+The API Reference contains the detailed technical documentation for WinCore
+and should be used when integrating or working with a specific API.
 
 ## Release Status
 
 **WinCore 0.6.3 is the first full public release of the project.**
 
-The library is released for general use, but comprehensive independent testing
-across every supported Windows configuration, GPU, driver, Python version,
-PyTorch version, and hardware combination has not yet been completed.
+The library is now publicly available for general use. However, comprehensive
+testing across every supported Windows configuration, hardware combination,
+GPU, driver, Python version, and PyTorch version has not yet been completed.
 
-If you encounter unexpected behavior, compatibility issues, or incorrect results,
-please report them so they can be investigated and improved.
+Some behavior may therefore vary between environments.
 
-**Bug reports:**
+If you encounter unexpected behavior, compatibility issues, or incorrect
+results, please report them through the project's issue tracker:
+
 https://github.com/FWKMultiverse/WinCore/issues
+
+Bug reports, reproducible examples, and environment information are especially
+helpful for improving compatibility and reliability.
 
 ## Open Source
 
-WinCore is released under the **MIT License**.
+WinCore is free and open-source software released under the **MIT License**.
 
-You are free to use, modify, distribute, and integrate WinCore into your own
-projects, subject to the terms of the license.
+You are free to use, copy, modify, distribute, sublicense, and incorporate
+WinCore into your own projects, subject to the terms of the MIT License.
 
-See [`LICENSE`](LICENSE) for the full license text.
+See [`LICENSE`](LICENSE) for the complete license text.
 
-## Support the Project
+## Support
 
 If WinCore is useful to you and you would like to support its continued
 development:
@@ -82,5 +86,8 @@ https://github.com/sponsors/FWKMultiverse
 **Repository:**
 https://github.com/FWKMultiverse/WinCore
 
-WinCore is developed by **FWK Multiverse** and is built with a focus on
-practical, reliable tooling for the Windows ecosystem.
+**PyPI:**
+https://pypi.org/project/WinCore/0.6.3/
+
+WinCore is developed by **FWK Multiverse** with a focus on practical,
+reliable tooling for the Windows ecosystem.
