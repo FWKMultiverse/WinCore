@@ -24,36 +24,44 @@ PyPI: https://pypi.org/project/WinCore/0.7.1/
 
 ## What's New in 0.7.1
 
-* Added real OS-level CPU priority and CPU affinity controls through
+- Added real OS-level CPU priority and CPU affinity controls through
   `set_priority()`, `pin_affinity()`, and the extended `cpu.apply()` API.
-* Added FP8 tensor compression and decompression with dynamic per-tensor scaling.
-* Added the new `WinCore.kv.StepCache` for generic per-step tensor state with
-  append, sliding-window, replace, and optional FP8 compression support.
-* Added Windows working-set trimming with `memory.trim_working_set()`.
-* Added `memory.estimate_worker_ram_multiplier()` for estimating RAM usage from
+- Added FP8 tensor compression and decompression with dynamic per-tensor scaling.
+- Added `WinCore.kv.StepCache` for generic per-step tensor state with append,
+  sliding-window, replace, and optional FP8 compression support.
+- Added Windows working-set trimming with `memory.trim_working_set()`.
+- Added `memory.estimate_worker_ram_multiplier()` for estimating RAM usage from
   Windows `spawn`-based DataLoader workers.
-* Improved CUDA kernel build reliability and native extension detection.
-* Fixed Ninja detection when the executable exists in the installed Python
-  package but is not visible through the process `PATH`.
-* Improved Ninja error reporting to distinguish between missing Ninja and
-  unsupported or unknown installation layouts.
-* Improved Visual Studio / MSVC detection, including preview-channel
+- Improved native CUDA kernel build and extension handling.
+- Fixed Ninja detection when Ninja is installed but its executable is not
+  visible through the current process `PATH`.
+- Improved Ninja diagnostics to distinguish missing installations from
+  unrecognized binary layouts.
+- Improved Visual Studio and MSVC detection, including preview-channel
   installations and newer MSVC toolsets.
-* Fixed stale CUDA kernel reuse when rebuilding a loaded extension on Windows.
-* Fixed concurrent temporary-file name collisions in `atomic_write()`.
-* Fixed multi-worker `DiskCache` accounting so shared cache directories enforce
-  the real byte budget across processes.
-* Improved shared-cache hit detection and cross-process LRU handling.
-* Improved CPU affinity selection on Intel hybrid CPUs by preferring detected
+- Fixed stale CUDA extension reuse when rebuilding a loaded kernel on Windows.
+- Fixed temporary-file name collisions in `atomic_write()` between threads
+  in the same process.
+- Fixed `DiskCache` size accounting across multiple worker processes sharing
+  the same cache directory.
+- Fixed shared-cache hit detection across independent processes.
+- Improved cross-process cache eviction and LRU tracking.
+- Improved CPU affinity selection on Intel hybrid CPUs by preferring detected
   performance-core logical CPUs when available.
-* Added and expanded tests for CUDA builds, Ninja detection, cache behavior,
-  CPU affinity, atomic writes, and other Windows-specific paths.
-* Improved test infrastructure for environments without a real PyTorch
+- Fixed flaky cache tests caused by multiple live disk-usage measurements
+  during a single test.
+- Improved test infrastructure for environments without a real PyTorch
   installation by exercising supported fallback paths instead of silently
   skipping them.
-* Cleaned up the native CUDA build warning produced by the upstream MSVC
-  environment detection path.
-* Expanded real Windows/CUDA/MSVC verification of the compiled
+- Expanded the fake-torch test shim to cover additional tensor and AMP
+  operations required by the test suite.
+- Corrected the FP8 quantization documentation to match the implemented
+  behavior.
+- Added and expanded tests for CUDA builds, Ninja detection, clean rebuilds,
+  cache behavior, CPU affinity, and atomic writes.
+- Narrowly suppressed a confirmed harmless upstream MSVC environment warning
+  during native CUDA builds.
+- Expanded real Windows, CUDA, and MSVC verification of the compiled
   `fused_bias_gelu` kernel and related functionality.
 
 ## What WinCore Provides
