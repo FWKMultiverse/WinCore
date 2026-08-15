@@ -1,0 +1,30 @@
+
+[dev]
+pytest>=7
+ninja
+safetensors
+
+[full]
+psutil
+nvidia-ml-py
+safetensors
+
+[full:platform_system == "Windows"]
+wmi
+
+[gpu]
+nvidia-ml-py
+
+[kernels]
+ninja
+
+[safetensors]
+safetensors
+
+[sysinfo]
+psutil
+
+[windows-gpu-name]
+
+[windows-gpu-name:platform_system == "Windows"]
+wmi
