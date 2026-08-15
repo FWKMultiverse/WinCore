@@ -1,3 +1,0 @@
-include WinCore/kernels/*.cu
-include WinCore/README.md
-include WinCore/API_REFERENCE.md
