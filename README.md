@@ -24,10 +24,37 @@ PyPI: https://pypi.org/project/WinCore/0.7.1/
 
 ## What's New in 0.7.1
 
-* Added OS-level CPU priority and CPU affinity controls.
-* Added FP8 tensor compression with dynamic per-tensor scaling.
-* Added `WinCore.kv.StepCache` for per-step tensor state.
-* Added Windows working-set trimming and DataLoader RAM estimation tools.
+* Added real OS-level CPU priority and CPU affinity controls through
+  `set_priority()`, `pin_affinity()`, and the extended `cpu.apply()` API.
+* Added FP8 tensor compression and decompression with dynamic per-tensor scaling.
+* Added the new `WinCore.kv.StepCache` for generic per-step tensor state with
+  append, sliding-window, replace, and optional FP8 compression support.
+* Added Windows working-set trimming with `memory.trim_working_set()`.
+* Added `memory.estimate_worker_ram_multiplier()` for estimating RAM usage from
+  Windows `spawn`-based DataLoader workers.
+* Improved CUDA kernel build reliability and native extension detection.
+* Fixed Ninja detection when the executable exists in the installed Python
+  package but is not visible through the process `PATH`.
+* Improved Ninja error reporting to distinguish between missing Ninja and
+  unsupported or unknown installation layouts.
+* Improved Visual Studio / MSVC detection, including preview-channel
+  installations and newer MSVC toolsets.
+* Fixed stale CUDA kernel reuse when rebuilding a loaded extension on Windows.
+* Fixed concurrent temporary-file name collisions in `atomic_write()`.
+* Fixed multi-worker `DiskCache` accounting so shared cache directories enforce
+  the real byte budget across processes.
+* Improved shared-cache hit detection and cross-process LRU handling.
+* Improved CPU affinity selection on Intel hybrid CPUs by preferring detected
+  performance-core logical CPUs when available.
+* Added and expanded tests for CUDA builds, Ninja detection, cache behavior,
+  CPU affinity, atomic writes, and other Windows-specific paths.
+* Improved test infrastructure for environments without a real PyTorch
+  installation by exercising supported fallback paths instead of silently
+  skipping them.
+* Cleaned up the native CUDA build warning produced by the upstream MSVC
+  environment detection path.
+* Expanded real Windows/CUDA/MSVC verification of the compiled
+  `fused_bias_gelu` kernel and related functionality.
 
 ## What WinCore Provides
 
@@ -65,7 +92,8 @@ and should be used when integrating or working with a specific API.
 
 The library is publicly available for general use. However, comprehensive
 testing across every supported Windows configuration, hardware combination,
-GPU, driver, Python version, and PyTorch version has not yet been completed.
+GPU, driver, Python version, CUDA Toolkit version, MSVC toolset, and PyTorch
+version has not yet been completed.
 
 Some behavior may therefore vary between environments.
 
