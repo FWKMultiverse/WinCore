@@ -24,80 +24,74 @@ PyPI: https://pypi.org/project/WinCore/0.7.6/
 
 ## What's New in 0.7.6
 
-- Version bump plus a full documentation-accuracy pass across the whole
-  package, checking every module's docs against the actual current code
-  rather than just the most recently touched modules.
+**New module**
+- `WinCore.power` — two Windows-specific gaps for unattended AI training
+  with no default Linux equivalent:
+  - `prevent_sleep(keep_display_on=False)` — a context manager (also
+    usable via `.start()`/`.stop()`) around the real Win32
+    `SetThreadExecutionState` API, so a multi-hour training run doesn't
+    get silently suspended by Windows' idle timer, which a training loop
+    never "activates" since it produces no user-input events. No-op on
+    non-Windows.
+  - `check_tdr_risk()` — reads the Windows GPU driver watchdog timeout
+    (`TdrDelay` in the registry) and reports whether a single CUDA kernel
+    launch has only the ~2-second OS default before Windows kills and
+    resets the GPU driver. Read-only diagnostics aimed at the single most
+    confusing failure mode when writing/compiling custom CUDA kernels on
+    Windows, since `CUDA error: unspecified launch failure` otherwise
+    gives no indication a Windows-specific timer, not a bug, caused it.
+
+**Fixed — correctness**
 - `WinCore.cache.DiskCache`'s `max_bytes` budget is now enforced across
   every process sharing the same cache directory, not just the process
-  that created a given instance — fixes multi-worker `DataLoader` setups
-  on Windows (which always use `spawn`, never `fork`) silently exceeding
-  the intended cache size.
-- `WinCore.cpu.pin_affinity()` and `apply(affinity=True)` now both detect
-  real performance-core (P-core) logical CPUs on Intel hybrid CPUs,
-  instead of assuming the first N logical CPU indices are the fast ones.
-  `apply(affinity=True)` previously bypassed this detection; it now
-  shares the same P-core-aware selection as `pin_affinity()`.
-- Improved MSVC auto-detection to find Visual Studio installs on the
-  Preview/Insider channel (confirmed against a real Visual Studio 2026 /
-  MSVC v145 setup), not just stable releases.
-- Added a new module, `WinCore.power`, with `prevent_sleep()` (stops
-  Windows from suspending the machine mid-run during unattended training)
-  and `check_tdr_risk()` (reads the Windows GPU driver watchdog timeout
-  and flags whether a long CUDA kernel launch risks being killed and
-  surfacing as a misleading `CUDA error: unspecified launch failure`).
-- Corrected several `API_REFERENCE.md` inaccuracies found by diffing the
-  docs against real function signatures, including a missing
-  `lock_timeout` parameter on `DiskCache`, `CacheStats.hit_rate` being
-  documented as a method instead of a property, and the top-level
-  re-export list missing `atomic_torch_save`/`atomic_safetensors_save`.
-- `python -m WinCore --help`'s printed module list now includes `kv` and
-  `power`.
-- No source-code behavior changes beyond what's listed above — this
-  release rolls up several incremental fixes since 0.7.1 into one
-  version bump plus a documentation pass.
+  that created a given instance. On Windows, `DataLoader(num_workers>0)`
+  always uses `spawn` (never `fork`), so each worker previously tracked
+  its own independent, local view of usage — each one could "correctly"
+  stay under `max_bytes` on its own while the real directory grew toward
+  roughly `N × max_bytes`. Fixed with a dependency-free cross-process
+  lock and real directory rescans as the source of truth instead of
+  per-process local state; a new `lock_timeout` constructor parameter
+  bounds how long a process waits on that lock.
+- `WinCore.cpu.pin_affinity()` and `apply(affinity=True)` now both
+  correctly detect real performance-core (P-core) logical CPUs on Intel
+  hybrid CPUs via `GetLogicalProcessorInformationEx`, instead of assuming
+  the first N logical CPU indices are the fast ones — an assumption that
+  could silently pin a process onto efficiency cores on real hybrid
+  layouts. `apply(affinity=True)` — the form the Quick Start actually
+  uses — previously built its own CPU list and bypassed this detection
+  entirely even after it was added to `pin_affinity()`; both now share
+  the same selection logic.
+- `WinCore.kernels.build()`'s MSVC auto-detection now finds Visual Studio
+  installs on the Preview/Insider channel, not just stable releases —
+  confirmed against a real Visual Studio 2026 (MSVC v145) machine where
+  the previous `vswhere` query returned nothing despite the C++ Build
+  Tools being genuinely installed, silently falling back to an unfused
+  kernel with a misleading "Build Tools not installed" message.
+- `atomic_write()`'s temporary filename could collide between two
+  threads in the same process (it was unique per-process but not
+  per-thread); the thread id is now included in the temp filename.
+- `build(clean=True)` could silently return a stale, already-loaded
+  kernel instead of rebuilding: on Windows a `.pyd` already loaded into
+  the process is OS-locked and can't be deleted, and the previous cleanup
+  swallowed that error instead of surfacing it. It now raises a
+  `RuntimeWarning` naming the locked file and explaining the real
+  constraint instead of pretending the clean succeeded.
 
-## What's New in 0.7.1
-
-- Added real OS-level CPU priority and CPU affinity controls through
-  `set_priority()`, `pin_affinity()`, and the extended `cpu.apply()` API.
-- Added FP8 tensor compression and decompression with dynamic per-tensor
-  scaling.
-- Added `WinCore.kv.StepCache` for generic per-step tensor state with append,
-  sliding-window, replace, and optional FP8 compression support.
-- Added Windows working-set trimming with `memory.trim_working_set()`.
-- Added `memory.estimate_worker_ram_multiplier()` for estimating RAM usage from
-  Windows `spawn`-based DataLoader workers.
-- Improved native CUDA kernel build and extension handling.
-- Fixed Ninja detection when Ninja is installed but its executable is not
-  visible through the current process `PATH`.
-- Improved Ninja diagnostics to distinguish missing installations from
-  unrecognized binary layouts.
-- Improved Visual Studio and MSVC detection, including preview-channel
-  installations and newer MSVC toolsets.
-- Fixed stale CUDA extension reuse when rebuilding a loaded kernel on Windows.
-- Fixed temporary-file name collisions in `atomic_write()` between threads
-  in the same process.
-- Fixed `DiskCache` size accounting across multiple worker processes sharing
-  the same cache directory.
-- Fixed shared-cache hit detection across independent processes.
-- Improved cross-process cache eviction and LRU tracking.
-- Improved CPU affinity selection on Intel hybrid CPUs by preferring detected
-  performance-core logical CPUs when available.
-- Fixed flaky cache tests caused by multiple live disk-usage measurements
-  during a single test.
-- Improved test infrastructure for environments without a real PyTorch
-  installation by exercising supported fallback paths instead of silently
-  skipping them.
-- Expanded the fake-torch test shim to cover additional tensor and AMP
-  operations required by the test suite.
-- Corrected the FP8 quantization documentation to match the implemented
-  behavior.
-- Added and expanded tests for CUDA builds, Ninja detection, clean rebuilds,
-  cache behavior, CPU affinity, and atomic writes.
-- Narrowly suppressed a confirmed harmless upstream MSVC environment warning
-  during native CUDA builds.
-- Expanded real Windows, CUDA, and MSVC verification of the compiled
-  `fused_bias_gelu` kernel and related functionality.
+**Fixed — documentation accuracy** (found by diffing `API_REFERENCE.md`
+against the actual function signatures, not just re-reading prose)
+- `DiskCache`'s documented constructor signature was missing the new
+  `lock_timeout` parameter.
+- `CacheStats.hit_rate` was documented as a method (`.hit_rate()`) but is
+  actually a `@property` (`.hit_rate`, no parentheses).
+- The top-level re-export list was missing `atomic_torch_save` /
+  `atomic_safetensors_save`, even though `WinCore/__init__.py` has
+  re-exported both from the top level for some time.
+- `WinCore.cache`'s cross-process budget enforcement (above) wasn't
+  documented at all — added a full explanation, including what
+  `lock_timeout` bounds and why `__len__()` reflects "as of the last
+  eviction scan" rather than a live directory count.
+- `python -m WinCore --help`'s printed module list was missing `kv` and
+  `power`; both are now listed.
 
 ## What WinCore Provides
 
