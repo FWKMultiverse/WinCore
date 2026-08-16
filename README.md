@@ -17,16 +17,51 @@ multi-GPU workflows, caching, and Windows-aware I/O.
 ## Installation
 
 ```bash
-pip install WinCore==0.7.1
+pip install WinCore==0.7.6
 ```
 
-PyPI: https://pypi.org/project/WinCore/0.7.1/
+PyPI: https://pypi.org/project/WinCore/0.7.6/
+
+## What's New in 0.7.6
+
+- Version bump plus a full documentation-accuracy pass across the whole
+  package, checking every module's docs against the actual current code
+  rather than just the most recently touched modules.
+- `WinCore.cache.DiskCache`'s `max_bytes` budget is now enforced across
+  every process sharing the same cache directory, not just the process
+  that created a given instance — fixes multi-worker `DataLoader` setups
+  on Windows (which always use `spawn`, never `fork`) silently exceeding
+  the intended cache size.
+- `WinCore.cpu.pin_affinity()` and `apply(affinity=True)` now both detect
+  real performance-core (P-core) logical CPUs on Intel hybrid CPUs,
+  instead of assuming the first N logical CPU indices are the fast ones.
+  `apply(affinity=True)` previously bypassed this detection; it now
+  shares the same P-core-aware selection as `pin_affinity()`.
+- Improved MSVC auto-detection to find Visual Studio installs on the
+  Preview/Insider channel (confirmed against a real Visual Studio 2026 /
+  MSVC v145 setup), not just stable releases.
+- Added a new module, `WinCore.power`, with `prevent_sleep()` (stops
+  Windows from suspending the machine mid-run during unattended training)
+  and `check_tdr_risk()` (reads the Windows GPU driver watchdog timeout
+  and flags whether a long CUDA kernel launch risks being killed and
+  surfacing as a misleading `CUDA error: unspecified launch failure`).
+- Corrected several `API_REFERENCE.md` inaccuracies found by diffing the
+  docs against real function signatures, including a missing
+  `lock_timeout` parameter on `DiskCache`, `CacheStats.hit_rate` being
+  documented as a method instead of a property, and the top-level
+  re-export list missing `atomic_torch_save`/`atomic_safetensors_save`.
+- `python -m WinCore --help`'s printed module list now includes `kv` and
+  `power`.
+- No source-code behavior changes beyond what's listed above — this
+  release rolls up several incremental fixes since 0.7.1 into one
+  version bump plus a documentation pass.
 
 ## What's New in 0.7.1
 
 - Added real OS-level CPU priority and CPU affinity controls through
   `set_priority()`, `pin_affinity()`, and the extended `cpu.apply()` API.
-- Added FP8 tensor compression and decompression with dynamic per-tensor scaling.
+- Added FP8 tensor compression and decompression with dynamic per-tensor
+  scaling.
 - Added `WinCore.kv.StepCache` for generic per-step tensor state with append,
   sliding-window, replace, and optional FP8 compression support.
 - Added Windows working-set trimming with `memory.trim_working_set()`.
@@ -77,6 +112,7 @@ PyPI: https://pypi.org/project/WinCore/0.7.1/
 * Windows-aware DataLoader and memory utilities
 * Disk caching with safe writes
 * Optional CUDA kernel acceleration
+* Windows-specific power management (sleep prevention, TDR risk detection)
 
 WinCore is designed to be practical and conservative. When hardware or
 environment information cannot be reliably detected, it prefers reporting
@@ -96,7 +132,7 @@ and should be used when integrating or working with a specific API.
 
 ## Release Status
 
-**WinCore 0.7.1 is the current public release.**
+**WinCore 0.7.6 is the current public release.**
 
 The library is publicly available for general use. However, comprehensive
 testing across every supported Windows configuration, hardware combination,
@@ -135,7 +171,7 @@ https://github.com/sponsors/FWKMultiverse
 https://github.com/FWKMultiverse/WinCore
 
 **PyPI:**
-https://pypi.org/project/WinCore/0.7.1/
+https://pypi.org/project/WinCore/0.7.6/
 
 WinCore is developed by **FWK Multiverse** with a focus on practical,
 reliable tooling for the Windows ecosystem.
