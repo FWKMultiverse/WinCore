@@ -19,3 +19,73 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
+
+---
+
+> **Note on everything below this line:** WinCore-Foundation is licensed *only* under
+> the MIT License above. Nothing in the sections that follow adds a
+> condition, restriction, or obligation beyond what the MIT License already
+> states — they exist purely to explain the license in plain language and to
+> share the project's own hopes for how it's used. If anything below ever
+> appears to conflict with the MIT License text above, the MIT License text
+> above is what actually governs, and always wins.
+
+## Project Information
+
+**Project:** WinCore-Foundation
+**Copyright Holder:** FWK Multiverse
+**Original Repository:** https://github.com/FWKMultiverse/WinCore-Foundation.git
+
+WinCore-Foundation is free and open-source software released under the MIT License.
+The MIT License permits the Software to be used, copied, modified, merged,
+published, distributed, sublicensed, and sold, subject only to the two
+conditions written in the license text above: keep the copyright notice
+and license text with any copy or substantial portion of the Software,
+and accept the Software as provided with no warranty.
+
+## Credit and Attribution
+
+The MIT License already requires this, so it's worth stating plainly: any
+copy, fork, or substantial portion of WinCore-Foundation you distribute —
+modified or not — must keep the copyright notice and this license text
+included with it. That's not optional and doesn't depend on this section.
+
+Beyond that legal minimum, if WinCore-Foundation's code, a fused kernel, a diagnostic
+approach, or any other part of this project ends up useful in your own
+work, a mention of the WinCore-Foundation project and a link back to
+https://github.com/FWKMultiverse/WinCore-Foundation.git — in your README,
+credits page, or documentation — is genuinely appreciated. This part is a
+request, not a requirement: the MIT License above does not obligate you to
+publicly credit the project beyond keeping the notice in the source itself,
+and nothing here changes that.
+
+## Derivative Works
+
+You may use WinCore-Foundation in your own projects, including commercial and
+private projects, and you may distribute modified or derivative versions
+under the terms of the MIT License.
+
+You may give your own project, organization, or developer identity to a
+derivative work, and you are not required to present yourself as
+WinCore-Foundation's original developer, maintainer, or copyright holder.
+Doing so does not remove your obligation, under the MIT License, to keep the
+original WinCore-Foundation copyright notice and license text included with
+the code you distribute.
+
+Nothing in this section transfers ownership of the original WinCore-Foundation
+copyright, and nothing in this section permits removing the notices the MIT
+License requires.
+
+## Project's Hope for How WinCore-Foundation Is Used
+
+WinCore-Foundation was built as a practical, general-purpose tool to help people train
+and ship PyTorch models on Windows more reliably — that's the problem it
+exists to solve, and the hope is that it keeps being used that way: for
+legitimate development, research, and production work that helps the
+people using it.
+
+This section is the project's own stated intent, nothing more. It does not
+modify, restrict, revoke, or add any condition to the permissions the MIT
+License grants above, and it creates no enforceable obligation on anyone
+who uses, modifies, or distributes the Software. The MIT License's actual
+terms are the only terms that govern use of WinCore-Foundation.
